@@ -39,7 +39,7 @@ button:active{transform:translateY(1px);background:#263246}
 <div class="pill">DELAY <b>1.2s</b></div>
 </div>
 <canvas id="game" width="660" height="660"></canvas>
-<div class="legend"><span class="you">自分の未来</span><span class="enemy">敵の未来</span></div>
+<div class="legend"><span class="you">自分の未来</span><span class="enemy">敵の未来</span><span style="color:#b06cff">重なり</span></div>
 <div class="queue"><b>予約：</b> <span id="queue">なし</span></div>
 <div class="tip">直前の予約と逆方向を押すと、その1手を取り消せる。</div>
 <div class="controls">
@@ -187,7 +187,32 @@ function draw(now){
   ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#101722';ctx.fillRect(0,0,canvas.width,canvas.height);
   ctx.strokeStyle='#1c2634';ctx.lineWidth=1;for(let i=0;i<=N;i++){ctx.beginPath();ctx.moveTo(i*CELL,0);ctx.lineTo(i*CELL,canvas.height);ctx.stroke();ctx.beginPath();ctx.moveTo(0,i*CELL);ctx.lineTo(canvas.width,i*CELL);ctx.stroke()}
   for(const [x,y] of wallList){const px=x*CELL+3,py=y*CELL+3;ctx.fillStyle='#2a3240';rr(px,py,CELL-6,CELL-6,8);ctx.fill();ctx.strokeStyle='#3e4b60';ctx.stroke()}
-  drawFuture(player,playerFuture(),'#7bdcff');drawFuture(enemy,enemyFuture(),'#ff667d');
+  const pf=playerFuture(),ef=enemyFuture();
+  const pCells=new Set(pf.map(p=>key(p.x,p.y)));
+  const eCells=new Set(ef.map(p=>key(p.x,p.y)));
+  const overlap=new Set([...pCells].filter(k=>eCells.has(k)));
+
+  function drawFutureSplit(start,path,baseColor){
+    let prev=start;
+    path.forEach((p,i)=>{
+      const a=Math.max(.22,.78-i*.07);
+      const color=overlap.has(key(p.x,p.y))?'#b06cff':baseColor;
+      drawArrowSegment(prev,p,color,a,4);
+      const x=(p.x+.5)*CELL,y=(p.y+.5)*CELL;
+      ctx.globalAlpha=a;
+      ctx.fillStyle=color;
+      ctx.beginPath();ctx.arc(x,y,CELL*.11,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#081019';
+      ctx.font='700 13px system-ui';
+      ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(String(i+1),x,y+.5);
+      ctx.globalAlpha=1;
+      prev=p;
+    });
+  }
+
+  drawFutureSplit(player,pf,'#7bdcff');
+  drawFutureSplit(enemy,ef,'#ff667d');
   const ex=enemy.x*CELL+CELL*.17,ey=enemy.y*CELL+CELL*.17;ctx.fillStyle='#ff526b';rr(ex,ey,CELL*.66,CELL*.66,12);ctx.fill();ctx.fillStyle='#16090d';ctx.beginPath();ctx.arc(ex+CELL*.23,ey+CELL*.27,4,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(ex+CELL*.43,ey+CELL*.27,4,0,Math.PI*2);ctx.fill();
   const px=player.x*CELL+CELL*.14,py=player.y*CELL+CELL*.14;ctx.fillStyle='#f5f7ff';rr(px,py,CELL*.72,CELL*.72,14);ctx.fill();ctx.strokeStyle='#7bdcff';ctx.lineWidth=3;ctx.stroke();ctx.fillStyle='#081019';ctx.beginPath();ctx.arc(px+CELL*.27,py+CELL*.29,4,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(px+CELL*.49,py+CELL*.29,4,0,Math.PI*2);ctx.fill();
   drawCatchFx(now);
