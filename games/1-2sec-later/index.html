@@ -59,8 +59,11 @@ const dirs={up:{x:0,y:-1,s:'↑'},down:{x:0,y:1,s:'↓'},left:{x:-1,y:0,s:'←'}
 const opposite={up:'down',down:'up',left:'right',right:'left'};
 const wallList=[[2,1],[3,1],[4,1],[7,1],[7,2],[7,3],[1,3],[2,3],[3,3],[5,4],[6,4],[3,5],[3,6],[3,7],[7,6],[8,6],[9,6],[5,8],[6,8],[7,8],[1,9],[2,9]];
 const walls=new Set(wallList.map(([x,y])=>x+','+y));
-let player={x:5,y:9},enemy={x:5,y:1},pending=[],enemyPath=[],enemyTarget=null,score=0,catches=0,nextEnemyAt=0;
-let enemyPlan=[];
+let player={x:5,y:9},enemy={x:5,y:1};
+let pending=[];
+let enemyQueue=[];
+let enemyTarget=null;
+let score=0,catches=0;
 let catchFx=null,catchPauseUntil=0,respawnAt=0;
 statusEl.textContent='● READY';
 const key=(x,y)=>x+','+y,inside=(x,y)=>x>=0&&x<N&&y>=0&&y<N,walkable=(x,y)=>inside(x,y)&&!walls.has(key(x,y));
@@ -83,24 +86,40 @@ function randomOpenFarFrom(p,minDist=5){
   for(let y=0;y<N;y++)for(let x=0;x<N;x++)if(walkable(x,y)&&Math.abs(x-p.x)+Math.abs(y-p.y)>=minDist)cells.push({x,y});
   return cells[Math.floor(Math.random()*cells.length)]||{x:1,y:1};
 }
-function extendEnemyPlan(){
-  while(enemyPlan.length<FUTURE_STEPS){
-    const start=enemyPlan.length?enemyPlan[enemyPlan.length-1]:enemy;
-    if(!enemyTarget||(start.x===enemyTarget.x&&start.y===enemyTarget.y)){
-      enemyTarget=randomOpenFarFrom(start,5);
-    }
-    const route=bfs(start,enemyTarget);
-    if(!route.length){
-      enemyTarget=randomOpenFarFrom(start,4);
-      continue;
-    }
-    for(const step of route){
-      enemyPlan.push(step);
-      if(enemyPlan.length>=FUTURE_STEPS)break;
-    }
-  }
+function projectedEnemyEnd(){
+  return enemyQueue.length ? {...enemyQueue[enemyQueue.length-1]} : {...enemy};
 }
-function enemyFuture(){extendEnemyPlan();return enemyPlan.slice(0,FUTURE_STEPS)}
+
+function appendEnemyStep(){
+  const start=projectedEnemyEnd();
+
+  if(!enemyTarget || (start.x===enemyTarget.x && start.y===enemyTarget.y)){
+    enemyTarget=randomOpenFarFrom(start,5);
+  }
+
+  let route=bfs(start,enemyTarget);
+  if(!route.length){
+    enemyTarget=randomOpenFarFrom(start,4);
+    route=bfs(start,enemyTarget);
+  }
+  if(!route.length)return;
+
+  const step=route[0];
+  const lastAt=enemyQueue.length ? enemyQueue[enemyQueue.length-1].at : performance.now();
+  enemyQueue.push({
+    x:step.x,
+    y:step.y,
+    at:lastAt+ENEMY_STEP
+  });
+}
+
+function fillEnemyQueue(){
+  while(enemyQueue.length<FUTURE_STEPS)appendEnemyStep();
+}
+
+function enemyFuture(){
+  return enemyQueue.slice(0,FUTURE_STEPS);
+}
 function playerFuture(){
   let p={...player};const out=[];
   for(const item of pending){const d=dirs[item.dir],nx=p.x+d.x,ny=p.y+d.y;if(walkable(nx,ny))p={x:nx,y:ny};out.push({...p,dir:item.dir,at:item.at})}
@@ -123,21 +142,21 @@ function executePlayer(now){
   }
 }
 function executeEnemy(now){
-  if(now<nextEnemyAt)return;
-  nextEnemyAt=now+ENEMY_STEP;
-  extendEnemyPlan();
-  if(enemyPlan.length){
-    enemy=enemyPlan.shift();
+  while(enemyQueue.length && enemyQueue[0].at<=now){
+    const step=enemyQueue.shift();
+    enemy={x:step.x,y:step.y};
     checkCatch();
-    extendEnemyPlan();
+    appendEnemyStep();
   }
 }
 function respawnEnemy(){
   enemy=randomOpenFarFrom(player,7);
   enemyTarget=null;
-  enemyPlan=[];
-  nextEnemyAt=performance.now()+900;
-  extendEnemyPlan();
+  enemyQueue=[];
+  const base=performance.now()+900-ENEMY_STEP;
+  enemyQueue.push({x:enemy.x,y:enemy.y,at:base});
+  enemyQueue.shift();
+  fillEnemyQueue();
 }
 function checkCatch(){
   if(player.x===enemy.x&&player.y===enemy.y && !catchFx){
