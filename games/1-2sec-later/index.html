@@ -6,139 +6,142 @@
 <title>1.2秒後の自分</title>
 <style>
 :root{color-scheme:dark}*{box-sizing:border-box}
-body{margin:0;background:#0d1016;color:#eef2ff;font-family:system-ui,-apple-system,"Hiragino Sans",sans-serif;min-height:100vh;display:flex;justify-content:center;align-items:center;touch-action:none}
-.wrap{width:min(94vw,720px);padding:18px 12px 28px;text-align:center}
-.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px}
-.back{color:#9fd8ff;text-decoration:none;font-size:13px}
-.status{font-size:12px;opacity:.7}
-h1{margin:0 0 4px;font-size:clamp(24px,5vw,42px);letter-spacing:.08em}
-.sub{opacity:.72;font-size:13px;margin-bottom:12px}
-.hud{display:flex;justify-content:space-between;gap:8px;margin:8px 2px;font-size:14px}
-.pill{background:#171d28;border:1px solid #2a3445;border-radius:999px;padding:7px 11px;flex:1}
-canvas{width:100%;aspect-ratio:1/1;display:block;border:1px solid #303a4c;border-radius:14px;background:#111722;box-shadow:0 18px 60px rgba(0,0,0,.35)}
-.queue{min-height:38px;margin:10px 0 6px;padding:8px 10px;border-radius:10px;background:#151b25;border:1px solid #263043;font-size:13px;text-align:left}
-.queue b{color:#9fd8ff}
-.controls{display:grid;grid-template-columns:repeat(3,74px);grid-template-rows:repeat(2,58px);gap:8px;justify-content:center;margin-top:12px}
-button{border:1px solid #39465d;border-radius:12px;background:#1b2432;color:#fff;font-size:23px;font-weight:700;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#0d1016;color:#eef2ff;font-family:system-ui,-apple-system,"Hiragino Sans",sans-serif;min-height:100dvh;display:flex;justify-content:center;align-items:flex-start;touch-action:none;overflow:hidden}
+.wrap{width:min(96vw,760px);padding:max(10px,env(safe-area-inset-top)) 12px calc(152px + env(safe-area-inset-bottom));text-align:center}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:4px}
+.back{color:#9fd8ff;text-decoration:none;font-size:13px}.status{font-size:12px;opacity:.72}
+h1{margin:0 0 3px;font-size:clamp(24px,5vw,38px);letter-spacing:.06em}
+.sub{opacity:.72;font-size:12px;margin-bottom:6px}
+.hud{display:flex;justify-content:space-between;gap:6px;margin:6px 0;font-size:12px}
+.pill{background:#171d28;border:1px solid #2a3445;border-radius:999px;padding:6px 8px;flex:1}
+canvas{width:min(100%,58dvh);max-width:560px;aspect-ratio:1/1;display:block;margin:0 auto;border:1px solid #303a4c;border-radius:14px;background:#111722;box-shadow:0 18px 60px rgba(0,0,0,.35)}
+.legend{display:flex;justify-content:center;gap:14px;margin:7px 0 0;font-size:11px;opacity:.72}
+.legend span::before{content:"";display:inline-block;width:18px;height:3px;border-radius:3px;margin-right:5px;vertical-align:middle;background:currentColor}
+.legend .you{color:#7bdcff}.legend .enemy{color:#ff667d}
+.queue{margin:7px auto 0;max-width:560px;min-height:34px;padding:7px 9px;border-radius:10px;background:#151b25;border:1px solid #263043;font-size:12px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.queue b{color:#9fd8ff}.tip{font-size:11px;opacity:.58;margin-top:5px}
+.controls{position:fixed;left:50%;bottom:calc(12px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:20;display:grid;grid-template-columns:repeat(3,70px);grid-template-rows:repeat(2,54px);gap:7px;padding:9px 12px;border-radius:18px;background:rgba(13,16,22,.92);border:1px solid rgba(57,70,93,.8);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+button{border:1px solid #39465d;border-radius:12px;background:#1b2432;color:#fff;font-size:24px;font-weight:700;-webkit-tap-highlight-color:transparent}
 button:active{transform:translateY(1px);background:#263246}
 #up{grid-column:2;grid-row:1}#left{grid-column:1;grid-row:2}#down{grid-column:2;grid-row:2}#right{grid-column:3;grid-row:2}
-.help{margin-top:12px;line-height:1.6;font-size:12px;opacity:.72}.accent{color:#9fd8ff}
-
-@media (max-width: 700px){
-  body{
-    min-height:100dvh;
-    align-items:flex-start;
-    overflow:hidden;
-    padding:
-      max(8px, env(safe-area-inset-top))
-      0
-      calc(156px + env(safe-area-inset-bottom));
-  }
-  .wrap{
-    width:100%;
-    max-width:none;
-    padding:8px 12px 0;
-  }
-  .top{margin-bottom:2px}
-  h1{font-size:28px;margin-bottom:2px}
-  .sub{font-size:12px;margin-bottom:6px}
-  .hud{margin:5px 0;font-size:12px;gap:5px}
-  .pill{padding:5px 7px}
-  canvas{
-    width:min(100%,46dvh);
-    max-width:430px;
-    margin:0 auto;
-  }
-  .queue{
-    margin:7px 0 0;
-    min-height:34px;
-    padding:7px 9px;
-    font-size:12px;
-  }
-  .controls{
-    position:fixed;
-    left:50%;
-    bottom:calc(12px + env(safe-area-inset-bottom));
-    transform:translateX(-50%);
-    z-index:20;
-    grid-template-columns:repeat(3,68px);
-    grid-template-rows:repeat(2,52px);
-    gap:7px;
-    margin:0;
-    padding:9px 12px;
-    border-radius:18px;
-    background:rgba(13,16,22,.92);
-    border:1px solid rgba(57,70,93,.8);
-    backdrop-filter:blur(12px);
-    -webkit-backdrop-filter:blur(12px);
-  }
-  button{font-size:24px}
-  .help{display:none}
-}
-
-@media (max-height: 760px) and (max-width:700px){
-  h1{font-size:24px}
-  .sub{display:none}
-  canvas{width:min(100%,41dvh)}
-  .queue{margin-top:5px}
-}
+@media(max-width:700px){h1{font-size:28px}canvas{width:min(100%,52dvh);max-width:430px}.sub{font-size:11px}}
+@media(max-height:760px) and (max-width:700px){h1{font-size:24px}.sub{display:none}canvas{width:min(100%,45dvh)}.legend{margin-top:4px}.tip{display:none}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="top"><a class="back" href="../../">← Playground</a><span class="status" id="status">起動中…</span></div>
-  <h1>1.2秒後の自分</h1>
-  <div class="sub">押した方向へ動く。ただし、命令が届くのは1.2秒後。</div>
-  <div class="hud">
-    <div class="pill">SCORE <b id="score">0</b></div>
-    <div class="pill">BEST <b id="best">0</b></div>
-    <div class="pill">DELAY <b>1.2s</b></div>
-  </div>
-  <canvas id="game" width="660" height="660"></canvas>
-  <div class="queue"><b>未来の命令：</b> <span id="queue">なし</span></div>
-  <div class="controls">
-    <button id="up" aria-label="上">↑</button>
-    <button id="left" aria-label="左">←</button>
-    <button id="down" aria-label="下">↓</button>
-    <button id="right" aria-label="右">→</button>
-  </div>
-  <div class="help">PC: 矢印 / WASD　｜　スマホ: ボタン<br><span class="accent">青い欠片</span>を取る。赤い追跡者に触れたら終了。<br>考えるのは「今どこへ行くか」ではなく「1.2秒後にどこにいたいか」。</div>
+<div class="top"><a class="back" href="../../">← Playground</a><span class="status" id="status">起動中…</span></div>
+<h1>1.2秒後の自分</h1>
+<div class="sub">敵の未来を読み、自分の未来を引いて、先回りして捕まえろ。</div>
+<div class="hud">
+<div class="pill">SCORE <b id="score">0</b></div>
+<div class="pill">CATCH <b id="catch">0</b></div>
+<div class="pill">DELAY <b>1.2s</b></div>
+</div>
+<canvas id="game" width="660" height="660"></canvas>
+<div class="legend"><span class="you">自分の未来</span><span class="enemy">敵の未来</span></div>
+<div class="queue"><b>予約：</b> <span id="queue">なし</span></div>
+<div class="tip">直前の予約と逆方向を押すと、その1手を取り消せる。</div>
+<div class="controls">
+<button id="up" aria-label="上">↑</button>
+<button id="left" aria-label="左">←</button>
+<button id="down" aria-label="下">↓</button>
+<button id="right" aria-label="右">→</button>
+</div>
 </div>
 <script>
 (()=>{
 const $=id=>document.getElementById(id);
-const canvas=$('game'),ctx=canvas.getContext('2d'),scoreEl=$('score'),bestEl=$('best'),queueEl=$('queue'),statusEl=$('status');
-statusEl.textContent='● READY';
-const N=11,CELL=canvas.width/N,DELAY=1200,MOVE_COOLDOWN=110,ENEMY_STEP=430;
+const canvas=$('game'),ctx=canvas.getContext('2d');
+const scoreEl=$('score'),catchEl=$('catch'),queueEl=$('queue'),statusEl=$('status');
+const N=11,CELL=canvas.width/N,INPUT_DELAY=1200,PLAYER_STEP=620,ENEMY_STEP=880,FUTURE_STEPS=8;
 const dirs={up:{x:0,y:-1,s:'↑'},down:{x:0,y:1,s:'↓'},left:{x:-1,y:0,s:'←'},right:{x:1,y:0,s:'→'}};
-let player,enemy,shard,queued,score,best=0,dead,lastMove,lastEnemy,flash=0,started=false;
-try{best=+(localStorage.getItem('delay-best')||0)}catch(e){}
-bestEl.textContent=best;
-const clamp=v=>Math.max(0,Math.min(N-1,v));
-function spawnShard(){do{shard={x:Math.floor(Math.random()*N),y:Math.floor(Math.random()*N)}}while((shard.x===player.x&&shard.y===player.y)||(shard.x===enemy.x&&shard.y===enemy.y))}
-function reset(){player={x:5,y:5};enemy={x:1,y:1};queued=[];score=0;dead=false;started=false;lastMove=0;lastEnemy=performance.now();flash=0;spawnShard();scoreEl.textContent=0;updateQueue()}
-function enqueue(d){if(dead){reset()}const now=performance.now();if(now-lastMove<MOVE_COOLDOWN)return;started=true;lastMove=now;queued.push({...dirs[d],at:now+DELAY});updateQueue()}
-function updateQueue(){if(!queued.length){queueEl.textContent='なし';return}const now=performance.now();queueEl.textContent=queued.map(q=>q.s+Math.max(0,(q.at-now)/1000).toFixed(1)).join('  ')}
-function stepPlayer(now){while(queued.length&&queued[0].at<=now){const q=queued.shift();player.x=clamp(player.x+q.x);player.y=clamp(player.y+q.y);if(player.x===shard.x&&player.y===shard.y){score++;scoreEl.textContent=score;flash=1;spawnShard();if(score>best){best=score;bestEl.textContent=best;try{localStorage.setItem('delay-best',best)}catch(e){}}}}}
-function stepEnemy(now){if(now-lastEnemy<ENEMY_STEP)return;lastEnemy=now;const dx=player.x-enemy.x,dy=player.y-enemy.y;if(Math.abs(dx)>Math.abs(dy))enemy.x+=Math.sign(dx);else if(dy!==0)enemy.y+=Math.sign(dy);else if(dx!==0)enemy.x+=Math.sign(dx)}
-function checkDead(){if(player.x===enemy.x&&player.y===enemy.y){dead=true;queued=[];updateQueue()}}
-function futurePath(){let x=player.x,y=player.y;return queued.map(q=>{x=clamp(x+q.x);y=clamp(y+q.y);return{x,y}})}
-function rr(x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r)}
-function draw(){
-ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#101722';ctx.fillRect(0,0,canvas.width,canvas.height);
-ctx.strokeStyle='#1d2736';ctx.lineWidth=1;for(let i=0;i<=N;i++){ctx.beginPath();ctx.moveTo(i*CELL,0);ctx.lineTo(i*CELL,canvas.height);ctx.stroke();ctx.beginPath();ctx.moveTo(0,i*CELL);ctx.lineTo(canvas.width,i*CELL);ctx.stroke()}
-const path=futurePath();if(path.length){ctx.setLineDash([8,8]);ctx.strokeStyle='rgba(120,200,255,.45)';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo((player.x+.5)*CELL,(player.y+.5)*CELL);path.forEach(p=>ctx.lineTo((p.x+.5)*CELL,(p.y+.5)*CELL));ctx.stroke();ctx.setLineDash([]);path.forEach((p,i)=>{ctx.fillStyle='rgba(120,200,255,'+Math.max(.12,.34-i*.03)+')';ctx.beginPath();ctx.arc((p.x+.5)*CELL,(p.y+.5)*CELL,CELL*.18,0,Math.PI*2);ctx.fill()})}
-const sx=(shard.x+.5)*CELL,sy=(shard.y+.5)*CELL;ctx.save();ctx.translate(sx,sy);ctx.rotate(performance.now()/700);ctx.fillStyle='#7bdcff';ctx.beginPath();for(let i=0;i<8;i++){const a=i*Math.PI/4,r=i%2?CELL*.14:CELL*.27,x=Math.cos(a)*r,y=Math.sin(a)*r;i?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.closePath();ctx.fill();ctx.restore();
-const ex=enemy.x*CELL+CELL*.18,ey=enemy.y*CELL+CELL*.18;ctx.fillStyle='#ff526b';rr(ex,ey,CELL*.64,CELL*.64,12);ctx.fill();
-const px=player.x*CELL+CELL*.14,py=player.y*CELL+CELL*.14;ctx.fillStyle='#f5f7ff';rr(px,py,CELL*.72,CELL*.72,14);ctx.fill();
-if(flash>0){ctx.fillStyle='rgba(123,220,255,'+(flash*.16)+')';ctx.fillRect(0,0,canvas.width,canvas.height);flash*=.88}
-if(dead){ctx.fillStyle='rgba(6,9,14,.72)';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#fff';ctx.textAlign='center';ctx.font='700 44px system-ui';ctx.fillText('未来が追いついた',canvas.width/2,canvas.height/2-12);ctx.font='20px system-ui';ctx.fillStyle='#cbd6e7';ctx.fillText('SCORE '+score+' — ボタンで再開',canvas.width/2,canvas.height/2+34)}
+const opposite={up:'down',down:'up',left:'right',right:'left'};
+const wallList=[[2,1],[3,1],[4,1],[7,1],[7,2],[7,3],[1,3],[2,3],[3,3],[5,4],[6,4],[3,5],[3,6],[3,7],[7,6],[8,6],[9,6],[5,8],[6,8],[7,8],[1,9],[2,9]];
+const walls=new Set(wallList.map(([x,y])=>x+','+y));
+let player={x:5,y:9},enemy={x:5,y:1},pending=[],enemyPath=[],enemyTarget=null,score=0,catches=0,nextEnemyAt=0;
+statusEl.textContent='● READY';
+const key=(x,y)=>x+','+y,inside=(x,y)=>x>=0&&x<N&&y>=0&&y<N,walkable=(x,y)=>inside(x,y)&&!walls.has(key(x,y));
+function neighbors(p){return [{x:p.x,y:p.y-1},{x:p.x+1,y:p.y},{x:p.x,y:p.y+1},{x:p.x-1,y:p.y}].filter(q=>walkable(q.x,q.y))}
+function bfs(start,goal){
+  const q=[{...start}],seen=new Set([key(start.x,start.y)]),parent=new Map();
+  while(q.length){
+    const cur=q.shift();
+    if(cur.x===goal.x&&cur.y===goal.y){
+      const path=[];let ck=key(cur.x,cur.y),now={...cur};
+      while(parent.has(ck)){path.push({...now});now=parent.get(ck);ck=key(now.x,now.y)}
+      return path.reverse();
+    }
+    for(const n of neighbors(cur)){const nk=key(n.x,n.y);if(seen.has(nk))continue;seen.add(nk);parent.set(nk,{...cur});q.push(n)}
+  }
+  return [];
 }
-function loop(now){if(!dead){stepPlayer(now);if(started){stepEnemy(now);checkDead()}}updateQueue();draw();requestAnimationFrame(loop)}
-addEventListener('keydown',e=>{const k=e.key.toLowerCase();if(k==='arrowup'||k==='w'){e.preventDefault();enqueue('up')}if(k==='arrowdown'||k==='s'){e.preventDefault();enqueue('down')}if(k==='arrowleft'||k==='a'){e.preventDefault();enqueue('left')}if(k==='arrowright'||k==='d'){e.preventDefault();enqueue('right')}})
-for(const d of ['up','down','left','right'])$(''+d).addEventListener('click',e=>{e.preventDefault();enqueue(d)});
-reset();requestAnimationFrame(loop);
-})()
+function randomOpenFarFrom(p,minDist=5){
+  const cells=[];
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++)if(walkable(x,y)&&Math.abs(x-p.x)+Math.abs(y-p.y)>=minDist)cells.push({x,y});
+  return cells[Math.floor(Math.random()*cells.length)]||{x:1,y:1};
+}
+function planEnemy(){
+  if(!enemyTarget||(enemy.x===enemyTarget.x&&enemy.y===enemyTarget.y)||enemyPath.length<3){
+    enemyTarget=randomOpenFarFrom(enemy,5);enemyPath=bfs(enemy,enemyTarget);
+  }
+}
+function enemyFuture(){planEnemy();return enemyPath.slice(0,FUTURE_STEPS)}
+function playerFuture(){
+  let p={...player};const out=[];
+  for(const item of pending){const d=dirs[item.dir],nx=p.x+d.x,ny=p.y+d.y;if(walkable(nx,ny))p={x:nx,y:ny};out.push({...p,dir:item.dir,at:item.at})}
+  return out;
+}
+function updateQueue(){
+  if(!pending.length){queueEl.textContent='なし';return}
+  const now=performance.now();queueEl.textContent=pending.map(p=>dirs[p.dir].s+Math.max(0,(p.at-now)/1000).toFixed(1)).join(' ');
+}
+function scheduleInput(dir){
+  if(pending.length&&opposite[pending[pending.length-1].dir]===dir){pending.pop();updateQueue();return}
+  const now=performance.now();const at=pending.length?Math.max(now+INPUT_DELAY,pending[pending.length-1].at+PLAYER_STEP):now+INPUT_DELAY;
+  pending.push({dir,at});updateQueue();
+}
+function executePlayer(now){
+  while(pending.length&&pending[0].at<=now){
+    const item=pending.shift(),d=dirs[item.dir],nx=player.x+d.x,ny=player.y+d.y;
+    if(walkable(nx,ny))player={x:nx,y:ny};
+    checkCatch();
+  }
+}
+function executeEnemy(now){
+  if(now<nextEnemyAt)return;
+  nextEnemyAt=now+ENEMY_STEP;planEnemy();
+  if(enemyPath.length){enemy=enemyPath.shift();checkCatch()}
+}
+function respawnEnemy(){
+  enemy=randomOpenFarFrom(player,7);enemyTarget=null;enemyPath=[];nextEnemyAt=performance.now()+900;planEnemy();
+}
+function checkCatch(){
+  if(player.x===enemy.x&&player.y===enemy.y){catches++;score+=100;catchEl.textContent=catches;scoreEl.textContent=score;respawnEnemy()}
+}
+function rr(x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r)}
+function drawArrowSegment(a,b,color,alpha=1,width=5){
+  const ax=(a.x+.5)*CELL,ay=(a.y+.5)*CELL,bx=(b.x+.5)*CELL,by=(b.y+.5)*CELL;
+  ctx.strokeStyle=color;ctx.globalAlpha=alpha;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(bx,by);ctx.stroke();
+  const ang=Math.atan2(by-ay,bx-ax),len=10;ctx.fillStyle=color;ctx.beginPath();ctx.moveTo(bx,by);ctx.lineTo(bx-Math.cos(ang-.55)*len,by-Math.sin(ang-.55)*len);ctx.lineTo(bx-Math.cos(ang+.55)*len,by-Math.sin(ang+.55)*len);ctx.closePath();ctx.fill();ctx.globalAlpha=1;
+}
+function drawFuture(start,path,color){
+  let prev=start;
+  path.forEach((p,i)=>{const a=Math.max(.22,.78-i*.07);drawArrowSegment(prev,p,color,a,4);const x=(p.x+.5)*CELL,y=(p.y+.5)*CELL;ctx.globalAlpha=a;ctx.fillStyle=color;ctx.beginPath();ctx.arc(x,y,CELL*.11,0,Math.PI*2);ctx.fill();ctx.fillStyle='#081019';ctx.font='700 13px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(String(i+1),x,y+.5);ctx.globalAlpha=1;prev=p})
+}
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#101722';ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.strokeStyle='#1c2634';ctx.lineWidth=1;for(let i=0;i<=N;i++){ctx.beginPath();ctx.moveTo(i*CELL,0);ctx.lineTo(i*CELL,canvas.height);ctx.stroke();ctx.beginPath();ctx.moveTo(0,i*CELL);ctx.lineTo(canvas.width,i*CELL);ctx.stroke()}
+  for(const [x,y] of wallList){const px=x*CELL+3,py=y*CELL+3;ctx.fillStyle='#2a3240';rr(px,py,CELL-6,CELL-6,8);ctx.fill();ctx.strokeStyle='#3e4b60';ctx.stroke()}
+  drawFuture(player,playerFuture(),'#7bdcff');drawFuture(enemy,enemyFuture(),'#ff667d');
+  const ex=enemy.x*CELL+CELL*.17,ey=enemy.y*CELL+CELL*.17;ctx.fillStyle='#ff526b';rr(ex,ey,CELL*.66,CELL*.66,12);ctx.fill();ctx.fillStyle='#16090d';ctx.beginPath();ctx.arc(ex+CELL*.23,ey+CELL*.27,4,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(ex+CELL*.43,ey+CELL*.27,4,0,Math.PI*2);ctx.fill();
+  const px=player.x*CELL+CELL*.14,py=player.y*CELL+CELL*.14;ctx.fillStyle='#f5f7ff';rr(px,py,CELL*.72,CELL*.72,14);ctx.fill();ctx.strokeStyle='#7bdcff';ctx.lineWidth=3;ctx.stroke();ctx.fillStyle='#081019';ctx.beginPath();ctx.arc(px+CELL*.27,py+CELL*.29,4,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(px+CELL*.49,py+CELL*.29,4,0,Math.PI*2);ctx.fill();
+}
+function loop(now){executePlayer(now);executeEnemy(now);updateQueue();draw();requestAnimationFrame(loop)}
+addEventListener('keydown',e=>{const k=e.key.toLowerCase();if(k==='arrowup'||k==='w'){e.preventDefault();scheduleInput('up')}if(k==='arrowdown'||k==='s'){e.preventDefault();scheduleInput('down')}if(k==='arrowleft'||k==='a'){e.preventDefault();scheduleInput('left')}if(k==='arrowright'||k==='d'){e.preventDefault();scheduleInput('right')}})
+for(const d of ['up','down','left','right'])$(d).addEventListener('click',e=>{e.preventDefault();scheduleInput(d)});
+respawnEnemy();requestAnimationFrame(loop);
+})();
 </script>
 </body>
 </html>
