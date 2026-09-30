@@ -59,12 +59,21 @@ document.getElementById("status").textContent = "● READY";
 
 READYにならない場合は、ゲームロジックより先にJavaScript実行環境を疑う。
 
+## 公開方式
+
+GitHub Pagesは **Deploy from a branch** を使用する。
+
+- Branch: `main`
+- Folder: `/(root)`
+- GitHub Actionsによる独自PagesデプロイWorkflowは使わない
+- `main` への更新がPagesへ反映される構成を標準とする
+
 ## 完了条件
 
 新作の設置完了は、ファイルをGitHubへ置いた時点ではない。
 
 1. GitHubへ追加
-2. GitHub Pagesへ反映
+2. `main` / `/(root)` のGitHub Pagesへ反映
 3. ランチャーから遷移できる
 4. JavaScriptが起動する
 5. iPhone Safariで主要操作ができる
