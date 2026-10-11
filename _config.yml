@@ -1,0 +1,3 @@
+# App archives keep their existing hosted URLs.
+exclude:
+  - apps

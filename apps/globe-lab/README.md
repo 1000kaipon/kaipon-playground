@@ -1,7 +1,6 @@
 # 地球儀 — Globe Lab
 
-- 試遊URL: https://1000kaipon.github.io/kaipon-playground/games/globe-lab/
-- 元のSites版: https://kaipon-globe-lab.qaipon.chatgpt.site
+- 公開・利用URL: https://kaipon-globe-lab.qaipon.chatgpt.site
 - 移植元: Sites v23 / `ecb62944439f2a675560a226063e8a42a616f6c3`
 - GitHubへの配置日: 2026-10-11
 
@@ -16,9 +15,9 @@
 - 世界時計、昼夜表示、ランダムな地球ツアー
 - 配色変更、海氷・雲・夜間光の保存データ、横スクロールする宇宙背景
 
-## GitHub Pages版の扱い
+## 保存用HTMLの扱い
 
-GitHub Pagesは静的配信のため、Sites版のサーバーAPIは移植していません。雲はHTMLに同梱した日時付き保存画像を表示し、更新ボタンは「保存画像を使用」と表示します。航空機・船舶は引き続き休止中です。
+このディレクトリはHTMLの保管用です。GitHub Pagesには公開せず、利用先は上記のSites版とします。保存用HTMLにはSites版のサーバーAPIは含まれません。雲はHTMLに同梱した日時付き保存画像を表示し、更新ボタンは「保存画像を使用」と表示します。航空機・船舶は引き続き休止中です。
 
 国データ、海氷、夜間光もリアルタイム情報ではありません。統計年や画像時刻、出典、地図の計算上の制約はアプリ内の「データ出典」「使い方」を参照してください。
 

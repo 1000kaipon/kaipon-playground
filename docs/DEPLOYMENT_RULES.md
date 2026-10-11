@@ -2,6 +2,14 @@
 
 このドキュメントを、今後このリポジトリへWebゲームやインタラクティブ試作を追加するときの正本とする。
 
+## アプリの保存（ゲームと区別）
+
+- ゲーム以外のアプリは `apps/<slug>/index.html` に保存する。
+- 既存の公開サイトがあるアプリは、そのURLを正規の利用先とし、READMEに記載する。
+- `apps/` は `_config.yml` の `exclude` でGitHub Pages公開対象から除外する。
+- 保存用アプリはPagesランチャーへの追加・Pages公開・以下のゲーム向け公開完了条件の対象外。保存先と内容を確認して完了とする。
+- 以下のPages公開手順は `games/` のゲームに適用する。
+
 ## 目的
 
 ChatGPTなどで生成したHTML/JavaScript作品を、iPhoneを含む通常ブラウザからHTTPSで実行できる形にする。
@@ -21,14 +29,14 @@ ChatGPTの添付HTML、iOSの「ファイル」アプリ、Quick Lookは最終�
       └─ index.html
 ```
 
-- 新作は原則 `games/<slug>/index.html`
+- 新作ゲームは原則 `games/<slug>/index.html`、ゲーム以外のアプリは `apps/<slug>/index.html`
 - slugは英小文字・数字・ハイフン
 - 作品ごとに独立したディレクトリを作る
 - 既存作品を上書きして別作品にしない
 
 ## ランチャー更新
 
-作品追加時はルート `index.html` に必ず以下を追加する。
+ゲーム追加時はルート `index.html` に必ず以下を追加する。
 
 - タイトル
 - 1〜2行の簡単な説明
